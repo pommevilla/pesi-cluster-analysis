@@ -1,0 +1,7 @@
+name: pesi-cluster-analysis-checkm2
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - checkm2

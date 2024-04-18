@@ -1,0 +1,9 @@
+name: r-pesi-cluster-analysis
+channels:
+  - conda-forge
+dependencies:
+  - r-base
+  - r-tidyverse=2.0.0
+  - r-vegan
+  - r-rtsne=0.17
+  - r-nbclust=3.0.1

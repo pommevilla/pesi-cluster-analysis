@@ -1,0 +1,7 @@
+name: pesi-cluster-analysis-panaroo
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - panaroo

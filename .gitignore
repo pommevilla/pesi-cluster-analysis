@@ -1,0 +1,5 @@
+# Snakemake artifacts
+.snakemake
+
+# Resource folders
+dbs/

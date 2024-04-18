@@ -1,0 +1,7 @@
+name: pesi-cluster-analysis-seqsero2
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - seqsero2

@@ -1,0 +1,7 @@
+name: pesi-cluster-analysis-bakta
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bakta
