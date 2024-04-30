@@ -1,0 +1,87 @@
+import click
+import subprocess
+
+# Notes
+## Subcommands
+
+# pesi_screen
+# pesi_extract
+# pesi_ordinate
+
+SNAKEMAKE_ARGS = ["snakemake", "--use-conda", "-c 2"]
+
+
+def run_snakemake_command(snakemake_path: str):
+    """Runs the snakemake workflow"""
+
+    subprocess.run(["snakemake", "--use-conda" f"--snakemake {snakemake_path}"])
+
+
+@click.command(epilog="This is kind of cool")
+@click.option("--count", default=1, help="number of greetings")
+@click.argument("name")
+def cli(count: int, name: str):
+    for _ in range(count):
+        click.echo(f", {name}!")
+
+
+@click.group
+@click.option(
+    "--dry-run",
+    is_flag=True,
+    default=False,
+    help="Perform a dry run of the associated snakemake workflow (only for subcommands)",
+)
+@click.pass_context
+def pesica(ctx: dict, dry_run: bool):
+    if dry_run:
+        print("Dry run enabled")
+    else:
+        print("Dry run disabled")
+
+    ctx.ensure_object(dict)
+
+    ctx.obj["DRY_RUN"] = dry_run
+
+
+@pesica.command()
+def tester():
+    """Test that snakemake works correctly from here"""
+    print("Running tester....")
+    subprocess.run(["snakemake", "--use-conda", "-c 2"])
+
+
+@pesica.command()
+@click.pass_context
+def screen(ctx):
+    """Screens pESI"""
+    print("Screening input files for pESI")
+
+    print(f"Value of dry_run is: {ctx.obj['DRY_RUN']}")
+
+    subprocess.run(
+        [
+            "snakemake",
+            # "--use-conda",
+            # "-c all",
+            "-np",
+            "--snakefile workflow/rules/pesi_screen_TEST.smk",
+        ]
+    )
+
+
+@pesica.command()
+def extract():
+    """Extracts pESI"""
+    subprocess.run(["snakemake", "--help"])
+    pass
+
+
+@pesica.command()
+def ordinate():
+    """Ordinates pESI"""
+    pass
+
+
+if __name__ == "__main__":
+    pesica(obj={})
