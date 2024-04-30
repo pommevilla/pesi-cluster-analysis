@@ -1,0 +1,7 @@
+name: pesica
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - snakemake
+  - click
