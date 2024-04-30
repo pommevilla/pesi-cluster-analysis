@@ -1,4 +1,4 @@
-name: pesi-cluster-analysis-bakta
+name: pesica-bakta
 channels:
   - conda-forge
   - bioconda

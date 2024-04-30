@@ -1,4 +1,4 @@
-name: pesi-cluster-analysis-checkm2
+name: pesica-checkm2
 channels:
   - conda-forge
   - bioconda

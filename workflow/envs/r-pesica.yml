@@ -1,4 +1,4 @@
-name: pesi-cluster-analysis-r
+name: pesica-r
 channels:
   - conda-forge
   - defaults

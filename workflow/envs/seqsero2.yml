@@ -1,4 +1,4 @@
-name: pesi-cluster-analysis-seqsero2
+name: pesica-seqsero2
 channels:
   - conda-forge
   - bioconda

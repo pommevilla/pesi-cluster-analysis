@@ -1,4 +1,4 @@
-name: pesi-cluster-analysis-panaroo
+name: pesica-panaroo
 channels:
   - conda-forge
   - bioconda
