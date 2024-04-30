@@ -1,6 +1,7 @@
-name: r-pesi-cluster-analysis
+name: pesi-cluster-analysis-r
 channels:
   - conda-forge
+  - defaults
 dependencies:
   - r-base
   - r-tidyverse=2.0.0
