@@ -1,0 +1,37 @@
+
+########### Program parameters ############
+inputs:
+  # query_sequence: data/GCA_003733365.1_PDT000396410.1_genomic.fna.gz
+  query_sequence: data/GCA_007348835.1_PDT000403610.1_genomic.fna.gz
+
+  # The directory containing the genomes of interest to screen in the pesi_screen step
+  input_directory: data/test_run
+
+  # You can choose a run name to help you organize your outputs.
+  run_name: test_run
+
+bakta:
+
+  # These are the light/full paths to the databases used by Bakta
+  # The light_db path should end in db-light
+  light_db: /project/fsepru/paul.villanueva/databases/bakta_dbs/db-light
+
+  # This path should end in db-full
+  full_db: /project/fsepru/paul.villanueva/databases/bakta_dbs/db-full
+
+blast:
+
+  # The swine Infantis genome with pESI plasmid
+  infantis_pesi_genome_db: resources/dbs/complete_infantis_chrom_and_pESI_db/complete_infantis_chrom_and_pESI.fasta
+
+panaroo:
+
+  pesi_cluster_pangenome: TO_BE_IMPLEMENTED
+
+metrics:
+
+  # Location of the checkm2 diamond database. It should end in .dmnd. 
+  checkm2_database: /project/fsepru/paul.villanueva/databases/CheckM2_database/uniref100.KO.1.dmnd
+
+references:
+  annotated_pesi: resources/CP052828.gbk
