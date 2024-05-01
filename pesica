@@ -17,6 +17,27 @@ def run_snakemake_command(snakemake_path: str):
     subprocess.run(["snakemake", "--use-conda" f"--snakemake {snakemake_path}"])
 
 
+####### CLI stuff
+
+## Global options for all subcommands
+## See: https://github.com/pallets/click/issues/108#issuecomment-194465429
+_global_test_options = [
+    click.option(
+        "--dry-run",
+        "-n",
+        is_flag=True,
+        default=False,
+        help="Perform a dry run of the associated snakemake workflow",
+    )
+]
+
+
+def global_options(func):
+    for option in reversed(_global_test_options):
+        func = option(func)
+    return func
+
+
 @click.command(epilog="This is kind of cool")
 @click.option("--count", default=1, help="number of greetings")
 @click.argument("name")
@@ -26,22 +47,16 @@ def cli(count: int, name: str):
 
 
 @click.group
-@click.option(
-    "--dry-run",
-    is_flag=True,
-    default=False,
-    help="Perform a dry run of the associated snakemake workflow (only for subcommands)",
-)
 @click.pass_context
-def pesica(ctx: dict, dry_run: bool):
-    if dry_run:
-        print("Dry run enabled")
-    else:
-        print("Dry run disabled")
+def pesica(ctx: dict):
+    # if dry_run:
+    #     print("Dry run enabled")
+    # else:
+    #     print("Dry run disabled")
 
     ctx.ensure_object(dict)
 
-    ctx.obj["DRY_RUN"] = dry_run
+    # ctx.obj["DRY_RUN"] = dry_run
 
 
 @pesica.command()
@@ -52,6 +67,7 @@ def tester():
 
 
 @pesica.command()
+@global_options
 @click.pass_context
 def screen(ctx):
     """Screens pESI"""
@@ -71,10 +87,29 @@ def screen(ctx):
 
 
 @pesica.command()
-def extract():
+@global_options
+@click.pass_context
+def extract(ctx: dict, dry_run: bool):
     """Extracts pESI"""
-    subprocess.run(["snakemake", "--help"])
-    pass
+    # subprocess.run(["snakemake", "--help"])
+
+    if dry_run:
+        print("Dry run enabled")
+        subprocess.run(
+            ["snakemake", "-n", "--snakefile", "workflow/rules/pesi_extract.smk"]
+        )
+    else:
+        print("Dry run disabled")
+        subprocess.run(
+            [
+                "snakemake",
+                "-c",
+                "all",
+                "--use-conda",
+                "--snakefile",
+                "workflow/rules/pesi_extract.smk",
+            ],
+        )
 
 
 @pesica.command()
