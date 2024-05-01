@@ -1,7 +1,8 @@
-name: pesica-blast
+name: pesica-extract
 channels:
   - conda-forge
   - bioconda
   - defaults
 dependencies:
   - blast
+  - seqtk
