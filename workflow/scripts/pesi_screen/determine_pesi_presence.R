@@ -38,7 +38,7 @@ genomes_with_pesi <- pesi_presence_table %>%
 
 if (snakemake@params[["save_session"]]) {
     save.image(
-        file = "determince_pesi_presence.RData"
+        file = "determine_pesi_presence.RData"
     )
 }
 

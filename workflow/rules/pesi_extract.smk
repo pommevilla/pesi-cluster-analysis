@@ -9,12 +9,22 @@ include: "common.smk"
 
 rule all:
     input:
+        # expand(
+        #     "outputs/{run_name}/pesi_extract/{genome}/blast_results.tsv",
+        #     run_name=RUN_NAME,
+        #     genome=INPUT_GENOMES_NO_GZ
+        # ),
+        # "extract_test.txt",
+        # expand(
+        #     "outputs/{run_name}/pesi_extract/{genome}/pesi_contigs_list.txt",
+        #     run_name=RUN_NAME,
+        #     genome=INPUT_GENOMES_NO_GZ
+        # ),
         expand(
-            "outputs/{run_name}/pesi_extract/{genome}_blast_results.tsv",
+            "outputs/{run_name}/pesi_extract/{genome}/{genome}.pesi.fasta",
             run_name=RUN_NAME,
             genome=INPUT_GENOMES_NO_GZ
-        ),
-        "extract_test.txt"
+        )
 
 rule test:
     output:
@@ -37,14 +47,51 @@ rule blast_infantis_chromosome_pesi:
     params:
         blast_db=config['blast']['infantis_pesi_genome_db'],
     output:
-        blast_results="outputs/{run_name}/pesi_extract/{genome}_blast_results.tsv"
+        blast_results="outputs/{run_name}/pesi_extract/{genome}/blast_results.tsv"
     log:
+        out="logs/{run_name}/pesi_extract/{genome}/blast_infantis_chromosome_pesi.out",
         err="logs/{run_name}/pesi_extract/{genome}/blast_infantis_chromosome_pesi.err",
-        out="logs/{run_name}/pesi_extract/{genome}/blast_infantis_chromosome_pesi.out"
     conda:
-        "../envs/blast.yml"
+        "../envs/extract.yml"
     script:
         "../scripts/pesi_extract/blast_helper.sh"
+
+rule filter_pesi_contigs:
+    input:
+        blast_results="outputs/{run_name}/pesi_extract/{genome}/blast_results.tsv"
+    output:
+        pesi_contigs_list="outputs/{run_name}/pesi_extract/{genome}/pesi_contigs_list.txt"
+    log:
+        out="logs/{run_name}/pesi_extract/{genome}/filter_pesi_contigs.out",
+        err="logs/{run_name}/pesi_extract/{genome}/filter_pesi_contigs.err"
+    params:
+        this_genome=lambda wildcards: wildcards.get("genome"),
+        # Set to TRUE if you need to debug the R session
+        save_session="FALSE"
+    conda:
+        "../envs/r-pesica.yml"
+    script:
+        "../scripts/pesi_extract/filter_pesi_contigs.R"
+
+rule extract_pesi_contigs:
+    input:
+        pesi_contigs_list="outputs/{run_name}/pesi_extract/{genome}/pesi_contigs_list.txt",
+        fasta_file=lambda wildcards: os.path.join(
+            config['inputs']['input_directory'],
+            f"{wildcards.genome}.gz"
+        )
+    output:
+        pesi_contigs="outputs/{run_name}/pesi_extract/{genome}/{genome}.pesi.fasta"
+    log:
+        out="logs/{run_name}/pesi_extract/{genome}/extract_pesi_contigs.out",
+        err="logs/{run_name}/pesi_extract/{genome}/extract_pesi_contigs.err"
+    conda:
+        "../envs/extract.yml"
+    shell:
+        """
+        seqtk subseq -l 0 {input.fasta_file} \
+            {input.pesi_contigs_list} > {output.pesi_contigs}
+        """
 
 # # Parse the BLAST output from above to get only the contigs from the pESI genome, 
 # # NOT the chromosome
