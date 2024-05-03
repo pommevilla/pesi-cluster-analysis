@@ -2,16 +2,16 @@
 ###################
 # Filter pESI contigs from BLAST results
 # Inputs:
-#   * pesi_extract/{genome}/blast_results.txt - BLAST results from genome against the chromosomal/pESI genomic data
+#   * extract/{genome}/blast_results.txt - BLAST results from genome against the chromosomal/pESI genomic data
 # Outputs:
-#   * pesi_extract/{genome}/pESI_contigs.txt - list of pESI contigs from BLAST results
+#   * extract/{genome}/pESI_contigs.txt - list of pESI contigs from BLAST results
 # Author: Paul Villanueva
 ###################
 
 library(tidyverse)
 
 blast_results <- read_tsv(
-    # "outputs/test_run/pesi_extract/GCA_003733365.1_PDT000396410.1_genomic.fna/blast_results.tsv",
+    # "outputs/test_run/extract/GCA_003733365.1_PDT000396410.1_genomic.fna/blast_results.tsv",
     snakemake@input[["blast_results"]],
     show_col_types = FALSE,
     c(
@@ -42,13 +42,15 @@ blast_results %>%
     filter(pident >= 95 & qcovs >= 70) %>%
     group_by(qseqid) %>%
     slice_max(order_by = bitscore, n = 1, with_ties = TRUE) %>%
-    ungroup() %>%
     filter(target_type == "pESI") %>%
+    ungroup() %>%
     select(qseqid) %>%
     distinct()
 
 
 # Modified
+# TODO: qvocs threshold and pident as parameters in config.yml
+# Translate to shell script
 pesi_contigs <- blast_results %>%
     filter(pident >= 95 & qcovs >= 70) %>%
     group_by(qseqid) %>%

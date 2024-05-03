@@ -12,7 +12,7 @@ run_blast() {
         -db ${snakemake_params[blast_db]} \
         -query $1 \
         -outfmt '6 qseqid qlen sseqid slen pident length mismatch gapopen qstart qend sstart send evalue bitscore qcovs salltitles' \
-        -num_threads 1 \
+        -num_threads 4 \
         -out ${snakemake_output[blast_results]}
 }
 

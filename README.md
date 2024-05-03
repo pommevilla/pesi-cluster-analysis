@@ -4,10 +4,15 @@ Given a Salmonella genome, this workflow will determine if infantis pESI is pres
 
 ## Using the pipeline
 
+* Create the pesica conda environment: `mamba env create -f env.yml`
 * Install the light and full dbs from bakta
-* Create a snakemake environment.
-* Edit the config.yml
-    * In particular....
+* Activate the virtual environment: `conda activate pesica`
+* Edit `workflow/config.yml`. For basic uses of the workflow, you'll only need to edit the following:
+    * `input_directory` is the directory that contains the genomes that you would like to run the pipeline on. 
+        * For now, the pipeline has only been tested on `gzipped` files (ie, those ending in `gz`, *not* `tar.gz`). It should work for uncompressed fastas, but this hasn't been tested.
+    * `run_name` can be whatever name you choose to help organize the workflow products inside the `outputs` directory. 
+    * Edit the `light_db` and `full_db` paths in the `bakta` section with the path where you downloaded the bakta directories to. The `light_db` and `full_db` values should be absolute paths ending in `db-light` and `db`.
+        * Example `shared/databases/db-light` or `shared/databases/db`
 * Run the steps of the pipeline
 
 ## Inputs
@@ -49,3 +54,4 @@ After extracting the pESI plasmid DNA, ordinate them into the existing clusters 
 ### I get "OSError: [Errno 39] Directory not empty: 'envs'" when I run the pipeline
 
 This error appears to mostly occur when a dry-run is attempted (ie, `snakemake -np`). This error should not impact the actual runs of the pipeline
+

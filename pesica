@@ -1,17 +1,8 @@
 import click
 import subprocess
 
-# Notes
-## Subcommands
 
-# pesi_screen
-# pesi_extract
-# pesi_ordinate
-
-SNAKEMAKE_ARGS = ["snakemake", "--use-conda", "-c 2"]
-
-
-def run_snakemake_command(snakemake_path: str):
+def run_snakemake_command(snakemake_path: str, **kwargs):
     """Runs the snakemake workflow"""
 
     subprocess.run(["snakemake", "--use-conda" f"--snakemake {snakemake_path}"])
@@ -32,21 +23,17 @@ _global_test_options = [
 ]
 
 
+# Decorator to add global functions to subcommands
 def global_options(func):
     for option in reversed(_global_test_options):
         func = option(func)
     return func
 
 
-@click.command(epilog="This is kind of cool")
-@click.option("--count", default=1, help="number of greetings")
-@click.argument("name")
-def cli(count: int, name: str):
-    for _ in range(count):
-        click.echo(f", {name}!")
+CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 
 
-@click.group
+@click.group(context_settings=CONTEXT_SETTINGS)
 @click.pass_context
 def pesica(ctx: dict):
     # if dry_run:
@@ -59,45 +46,19 @@ def pesica(ctx: dict):
     # ctx.obj["DRY_RUN"] = dry_run
 
 
-@pesica.command()
-def tester():
-    """Test that snakemake works correctly from here"""
-    print("Running tester....")
-    subprocess.run(["snakemake", "--use-conda", "-c 2"])
-
-
+####### Subcommands
 @pesica.command()
 @global_options
 @click.pass_context
-def screen(ctx):
-    """Screens pESI"""
-    print("Screening input files for pESI")
+def diagnostics(ctx, dry_run: bool):
+    """Runs diagnostics for input genomes"""
+    print("Running diagnostics for input genomes")
 
     print(f"Value of dry_run is: {ctx.obj['DRY_RUN']}")
 
-    subprocess.run(
-        [
-            "snakemake",
-            # "--use-conda",
-            # "-c all",
-            "-np",
-            "--snakefile workflow/rules/pesi_screen_TEST.smk",
-        ]
-    )
-
-
-@pesica.command()
-@global_options
-@click.pass_context
-def extract(ctx: dict, dry_run: bool):
-    """Extracts pESI"""
-    # subprocess.run(["snakemake", "--help"])
-
     if dry_run:
         print("Dry run enabled")
-        subprocess.run(
-            ["snakemake", "-n", "--snakefile", "workflow/rules/pesi_extract.smk"]
-        )
+        subprocess.run(["snakemake", "-n", "--snakefile", "workflow/rules/extract.smk"])
     else:
         print("Dry run disabled")
         subprocess.run(
@@ -107,7 +68,59 @@ def extract(ctx: dict, dry_run: bool):
                 "all",
                 "--use-conda",
                 "--snakefile",
-                "workflow/rules/pesi_extract.smk",
+                "workflow/rules/extract.smk",
+            ],
+        )
+
+
+@pesica.command()
+@global_options
+@click.pass_context
+def screen(ctx: dict, dry_run: bool):
+    """Screens pESI"""
+
+    print("Screening input genomes for pESI presence...")
+
+    if dry_run:
+        print("Performing dry run...")
+        subprocess.run(["snakemake", "-n", "--snakefile", "workflow/rules/screen.smk"])
+    else:
+        subprocess.run(
+            [
+                "snakemake",
+                "-c",
+                "all",
+                "-j",
+                "unlimited",
+                "--use-conda",
+                "--snakefile",
+                "workflow/rules/screen.smk",
+            ],
+        )
+
+
+@pesica.command()
+@global_options
+@click.pass_context
+def extract(ctx: dict, dry_run: bool):
+    """Extracts pESI"""
+
+    print("Extracting pESI contigs from input genomes where pESI was detected...")
+
+    if dry_run:
+        print("Performing dry run...")
+        subprocess.run(["snakemake", "-n", "--snakefile", "workflow/rules/extract.smk"])
+    else:
+        subprocess.run(
+            [
+                "snakemake",
+                "-c",
+                "all",
+                "-j",
+                "unlimited",
+                "--use-conda",
+                "--snakefile",
+                "workflow/rules/extract.smk",
             ],
         )
 

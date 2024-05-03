@@ -8,7 +8,7 @@
 library(tidyverse)
 
 gene_presence_list <- read_tsv(
-    "outputs/test_run/pesi_screen/infantis_genome_pESI_genes.tsv",
+    "outputs/test_run/screen/infantis_genome_pESI_genes.tsv",
     show_col_types = FALSE,
     col_names = c(
         "genome_name",

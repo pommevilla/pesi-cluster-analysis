@@ -7,7 +7,7 @@
 # Outputs: 
 #   * infantis_genome_pESI_genes.tsv: filtered bakta output for all pESI genes found in inputs
 #   * pesi_presence.tsv: tsv of genomes, repA presence, # pESI genes found, and whether pESI is present
-#   * genomes_with_pesi.tsv: a list of genomes that have the pESI plasmid
+#   * genomes_with_pesi.txt: a list of genomes that have the pESI plasmid
 # Author: Paul Villanueva
 ###################
 
@@ -16,7 +16,6 @@ include: "common.smk"
 
 rule all:
     input:
-        # Outputs for the pesi screen
         # Quick bakta annotations
         expand(
             "outputs/{run_name}/screen/{genome}.bakta/{genome}.tsv", 
@@ -24,10 +23,12 @@ rule all:
             genome=INPUT_GENOMES_NO_GZ
         ),
 
+        # Summary files with pESI gene counts and a list of genomes that 
+        # pESI were detected in
         expand(
             "outputs/{run_name}/screen/{screen_summary}",
             run_name=RUN_NAME,
-            screen_summary=["pesi_presence.tsv", "genomes_with_pesi.tsv"]
+            screen_summary=["pesi_presence.tsv", "genomes_with_pesi.txt"]
         )
 
 # Use bakta to annotate the input data against a pESI genome
@@ -45,24 +46,24 @@ rule quick_pesi_annotation:
     params:
         light_db=config['bakta']['light_db'],
         pesi_reference=config['references']['annotated_pesi'],
-        # input_dir=config['inputs']['input_directory']
     log:
         err="logs/{run_name}/screen/{genome}/quick_pesi_annotation.err",
         out="logs/{run_name}/screen/{genome}/quick_pesi_annotation.out"
     conda:
         "../envs/bakta.yml"
-    threads: 2
+    threads: 4
     shell:
         # Using force command here because snakemake automatically creates the output directory
-        # which causes bakta to not run
+        # which causes bakta to error out
         """
         echo "{wildcards.run_name}: Running bakta on {wildcards.genome} against pESI genome"
         bakta --db {params.light_db} \
             --output outputs/{wildcards.run_name}/screen/{wildcards.genome}.bakta \
             --keep-contig-headers \
             --proteins {params.pesi_reference} \
+            --threads {threads} \
             --skip-trna --skip-tmrna --skip-rrna --skip-ncrna --skip-ncrna-region --skip-crispr \
-            --skip-pseudo --skip-sorf --skip-gap --skip-ori --skip-plot  --force \
+            --skip-pseudo --skip-sorf --skip-gap --skip-ori --skip-plot --force \
             {input.input_genome} 1> {log.out} 2> {log.err} && \
         echo "Finished annotation"
         """
@@ -75,10 +76,9 @@ rule parse_bakta_output:
             run_name=RUN_NAME,
             genome=INPUT_GENOMES_NO_GZ
         )
-        # bakta_file="outputs/{run_name}/screen/{genome}.bakta/{genome}.tsv"
     output:
         pesi_gene_info="outputs/{run_name}/screen/pesi_presence.tsv",
-        genomes_with_pesi="outputs/{run_name}/screen/genomes_with_pesi.tsv",
+        genomes_with_pesi="outputs/{run_name}/screen/genomes_with_pesi.txt",
     params:
         # See config for the list of pESI genes that we're looking for
         pesi_search_string=r"\|".join(PESI_GENES)
