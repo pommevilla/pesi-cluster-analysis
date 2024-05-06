@@ -1,5 +1,12 @@
-# Snakemake artifacts
+# Snakemake files
 .snakemake
+logs/**
+.snakemake/**
+results/**
+resources/**
 
-# Resource folders
-dbs/
+# Intermediate folders
+scratch
+Rplots.pdf
+outputs/**
+data/**
