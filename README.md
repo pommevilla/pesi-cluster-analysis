@@ -9,12 +9,13 @@ Pesica is a collection of tools to detect and extract pESI plasmid contigs from 
 ## Contents
 
 - [Setup](#setup)
-- [Usage](#usage)
-- [Workflow details](#workflow-details)
+- [Example Usage](#example-usage)
+    - [Notes](#notes)
+- [Workflow Details](#workflow-details)
     - [Screen](#screen)
     - [Extract](#extract)
     - [Ordinate](#ordinate)
-- [Programs and tools](#programs-and-tools)
+- [Programs and Tools](#programs-and-tools)
 - [FAQ](#faq)
 
 ## Setup
