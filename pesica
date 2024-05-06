@@ -1,5 +1,11 @@
+###################
+# CLI for the pesica workflow
+# Author: Paul Villanueva
+###################
 import click
 import subprocess
+
+####### Helper functions
 
 
 def run_snakemake_command(snakemake_path: str, **kwargs):
@@ -36,14 +42,7 @@ CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 @click.group(context_settings=CONTEXT_SETTINGS)
 @click.pass_context
 def pesica(ctx: dict):
-    # if dry_run:
-    #     print("Dry run enabled")
-    # else:
-    #     print("Dry run disabled")
-
     ctx.ensure_object(dict)
-
-    # ctx.obj["DRY_RUN"] = dry_run
 
 
 ####### Subcommands
@@ -52,25 +51,8 @@ def pesica(ctx: dict):
 @click.pass_context
 def diagnostics(ctx, dry_run: bool):
     """Runs diagnostics for input genomes"""
-    print("Running diagnostics for input genomes")
-
-    print(f"Value of dry_run is: {ctx.obj['DRY_RUN']}")
-
-    if dry_run:
-        print("Dry run enabled")
-        subprocess.run(["snakemake", "-n", "--snakefile", "workflow/rules/extract.smk"])
-    else:
-        print("Dry run disabled")
-        subprocess.run(
-            [
-                "snakemake",
-                "-c",
-                "all",
-                "--use-conda",
-                "--snakefile",
-                "workflow/rules/extract.smk",
-            ],
-        )
+    print(">>>> Not yet implemented <<<<")
+    ctx.exit(1)
 
 
 @pesica.command()
@@ -126,9 +108,12 @@ def extract(ctx: dict, dry_run: bool):
 
 
 @pesica.command()
-def ordinate():
+@global_options
+@click.pass_context
+def ordinate(ctx, dry_run: bool):
     """Ordinates pESI"""
-    pass
+    print(">>>> Not yet implemented <<<<")
+    ctx.exit(1)
 
 
 if __name__ == "__main__":
