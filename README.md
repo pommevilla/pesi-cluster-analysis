@@ -98,6 +98,14 @@ This will output several files that are detailed in the [extract subcommand deta
 
 To be implemented.
 
+### Notes
+
+* Since these are just snakemake workflows with a basic CLI, the pipeline needs to be run from inside this directory.
+* If you are familiar with snakemake, you can skip the CLI and run the workflow directly with your own commands and options. The commands should look something like `snakemake --use-conda --snakefile workflow/rules/<subcommand>.smk`, but you can add whatever options you want besides that.
+* The `screen` step isn't too resource intensive, but the `extract` step can be. It is recommended to run it with more cores, such as through an interactive session (eg, `salloc -n 32`). Job submission to slurm will be added later.
+
+
+
 ## Workflow details
 
 ### Screen
@@ -128,6 +136,11 @@ After extracting the pESI plasmid DNA, ordinate them into the existing clusters 
 * [BLAST](https://www.ncbi.nlm.nih.gov/books/NBK279690/) - pESI gene search
 * [Panaroo](https://github.com/gtonkinhill/panaroo) - pangenome insertion and clustering
 
+
+## Upcoming features
+
+* Documentation site
+* HPC/Slurm support
 
 ## FAQ
 
