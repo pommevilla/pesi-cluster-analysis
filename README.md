@@ -1,5 +1,7 @@
 # pesica: *S. Infantis* <ins>pESI</ins> <ins>C</ins>luster <ins>A</ins>nalysis
 
+*Work in progress*
+
 Pesica is a collection of tools to detect and extract pESI plasmid contigs from *Salmonella Infantis* genomes, and to assign them to clusters based on presence/absence of genes in an existing pangenome. There are three steps in the pipeline:
 
 * Screening: Detect the presence of marker genes in the input genomes that indicate the presence of the pESI plasmid
@@ -32,7 +34,10 @@ Pesica is a collection of snakemake workflows collected together with a command 
     * `run_name` can be whatever name you choose to help organize the workflow products inside the `outputs` directory. 
     * Edit the `light_db` and `full_db` paths in the `bakta` section with the path where you downloaded the bakta directories to. The `light_db` and `full_db` values should be absolute paths ending in `db-light` and `db`.
         * Example `shared/databases/db-light` or `shared/databases/db`
+    * You can leave the other values alone.
 * Activate the virtual environment: `conda activate pesica`
+* Run the setup script: `python pesica setup`
+    * This will extract the included blastdb, download the required bakta databases, and set up the virtual environments used in the rest of the pipeline
 
 ## Example usage
 
@@ -42,7 +47,7 @@ After setting the config values and activating the `pesica` virtual environment 
 python pesica <subcommand> <options>
 ```
 
-Here, `subcommand` is one of `screen`, `extract`, or `ordinate` (Note: for now, only `screen` and `extract` is implemented). Each subcommand (and `pesica` itself) as a `help` page that you can access with `--help` or `-h`:
+Here, `subcommand` is one of `screen`, `extract`, or `ordinate` (Note: for now, only `screen` and `extract` is implemented). Each subcommand (and `pesica` itself) has a `help` page that you can access with `--help` or `-h`:
 
 ```bash
 python pesica --help

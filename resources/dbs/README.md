@@ -1,4 +1,7 @@
 # dbs/
 
 Databases used by the pipeline are stored here.
-If you have an existing bakta database, you can configure the bakta db locations in the `config.yml` file.
+
+## Contents
+
+* `complete_infantis_chrom_and_pesi_db.tar.gz` - the archived BLAST database for a complete Salmonella Infantis chromosome containing a pESI plasmid. This gets decompressed during the `pesica setup` step.

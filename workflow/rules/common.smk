@@ -32,3 +32,8 @@ INPUT_GENOMES = [os.path.basename(fin) for fin in INPUT_GENOMES_PATHS]
 
 # The genome file names without the trailing gz if it exists:
 INPUT_GENOMES_NO_GZ = [fin[:-3] for fin in INPUT_GENOMES if fin.endswith(".gz")]
+
+# Suffixes for the BLAST db files
+BLAST_DB_SUFFIXES = [
+    "ndb", "nhr", "nin", "njs", "nog", "nos", "not", "nsq", "ntf", "nto"
+]

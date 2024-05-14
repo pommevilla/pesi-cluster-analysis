@@ -1,10 +1,13 @@
 
 ########### Program parameters ############
 inputs:
-  # The directory containing the genomes of interest to screen in the screen step
-  input_directory: data/test_run
+  # The directory containing the genomes of interest 
+  # input_directory: data/assemblies_gzip
+  # input_directory: /90daydata/shared/dbradshaw_to_pvillanueva/recheck/assemblies_gzip
+  input_directory: data/query_genomes
 
-  # You can choose a run name to help you organize your outputs.
+  # A run name to organize the outputs under. All pipeline outputs will be stored in
+  # outputs/<run_name>
   run_name: test_run
 
 bakta:
@@ -18,7 +21,8 @@ bakta:
 
 blast:
 
-  # The swine Infantis genome with pESI plasmid
+  # The BLAST database used to search for pESI-like contigs.
+  # You don't need to change this value for basic uses of the pipeline.
   infantis_pesi_genome_db: resources/dbs/complete_infantis_chrom_and_pESI_db/complete_infantis_chrom_and_pESI.fasta
 
 panaroo:
@@ -35,4 +39,5 @@ metrics:
 references:
 
   # An annotated Salmonella Infantis pESI plasmid
+  # You don't need to change this value for basic uses of the pipeline.
   annotated_pesi: resources/CP052828.gbk

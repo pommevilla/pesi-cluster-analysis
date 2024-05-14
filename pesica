@@ -8,10 +8,11 @@ import subprocess
 ####### Helper functions
 
 
-def run_snakemake_command(snakemake_path: str, **kwargs):
+# TODO
+def run_snakemake_command(snakemake_rule_path: str, **kwargs):
     """Runs the snakemake workflow"""
 
-    subprocess.run(["snakemake", "--use-conda" f"--snakemake {snakemake_path}"])
+    subprocess.run(["snakemake", "--use-conda" f"--snakemake {snakemake_rule_path}"])
 
 
 ####### CLI stuff
@@ -46,6 +47,10 @@ def pesica(ctx: dict):
 
 
 ####### Subcommands
+
+
+#### Diagnostics
+# Run diagnostic programs on the input genomes
 @pesica.command()
 @global_options
 @click.pass_context
@@ -55,6 +60,36 @@ def diagnostics(ctx, dry_run: bool):
     ctx.exit(1)
 
 
+#### Setup
+# Setup virtual environments, decompress the blast DB, download bakta databases
+@pesica.command()
+@global_options
+@click.pass_context
+def setup(ctx: dict, dry_run: bool):
+    """Setups the pesica pipeline"""
+
+    print("Performing setup steps.")
+
+    if dry_run:
+        print("Performing dry run...")
+        subprocess.run(["snakemake", "-n", "--snakefile", "workflow/rules/setup.smk"])
+    else:
+        subprocess.run(
+            [
+                "snakemake",
+                "-c",
+                "all",
+                "-j",
+                "unlimited",
+                "--use-conda",
+                "--snakefile",
+                "workflow/rules/setup.smk",
+            ],
+        )
+
+
+#### Screen
+# Determine the presence/absence of pESI in the input genomes
 @pesica.command()
 @global_options
 @click.pass_context
@@ -81,6 +116,8 @@ def screen(ctx: dict, dry_run: bool):
         )
 
 
+#### Extract
+# Extract pESI-like contigs from input genomes
 @pesica.command()
 @global_options
 @click.pass_context
@@ -107,6 +144,8 @@ def extract(ctx: dict, dry_run: bool):
         )
 
 
+#### Ordinate
+# Given pESI-like contigs, insert them into an existing pangenome and cluster them
 @pesica.command()
 @global_options
 @click.pass_context
