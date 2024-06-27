@@ -67,25 +67,50 @@ def diagnostics(ctx, dry_run: bool):
 @click.pass_context
 def setup(ctx: dict, dry_run: bool):
     """Setups the pesica pipeline"""
+    print(">>>> Not yet implemented <<<<")
+    ctx.exit(1)
 
-    print("Performing setup steps.")
+    # print("Performing setup steps.")
 
-    if dry_run:
-        print("Performing dry run...")
-        subprocess.run(["snakemake", "-n", "--snakefile", "workflow/rules/setup.smk"])
-    else:
-        subprocess.run(
-            [
-                "snakemake",
-                "-c",
-                "all",
-                "-j",
-                "unlimited",
-                "--use-conda",
-                "--snakefile",
-                "workflow/rules/setup.smk",
-            ],
-        )
+    # if dry_run:
+    #     print("Performing dry run...")
+    #     subprocess.run(["snakemake", "-n", "--snakefile", "workflow/rules/setup.smk"])
+    #     ctx.exit(0)
+
+    # # Decompresses the blast DB
+    # subprocess.run(
+    #     [
+    #         "snakemake",
+    #         "-c",
+    #         "all",
+    #         "-j",
+    #         "unlimited",
+    #         "--use-conda",
+    #         "--snakefile",
+    #         "workflow/rules/setup.smk",
+    #     ],
+    # )
+
+    # # Sets up all the required conda environments
+    # all_snakemake_rules = ["screen", "extract", "ordinate"]
+
+    # processes = set()
+
+    # for rule in all_snakemake_rules:
+    #     p = subprocess.Popen(
+    #         [
+    #             "snakemake",
+    #             "-c",
+    #             "all",
+    #             "--use-conda",
+    #             "--create-envs-only",
+    #             "--snakefile",
+    #             f"workflow/rules/{rule}.smk",
+    #         ],
+    #         stdout=subprocess.PIPE,
+    #         stderr=subprocess.PIPE,
+    #     )
+    #     processes.add(p)
 
 
 #### Screen
@@ -142,17 +167,6 @@ def extract(ctx: dict, dry_run: bool):
                 "workflow/rules/extract.smk",
             ],
         )
-
-
-#### Ordinate
-# Given pESI-like contigs, insert them into an existing pangenome and cluster them
-@pesica.command()
-@global_options
-@click.pass_context
-def ordinate(ctx, dry_run: bool):
-    """Ordinates pESI"""
-    print(">>>> Not yet implemented <<<<")
-    ctx.exit(1)
 
 
 if __name__ == "__main__":

@@ -2,11 +2,12 @@
 
 *Work in progress*
 
-Pesica is a collection of tools to detect and extract pESI plasmid contigs from *Salmonella Infantis* genomes, and to assign them to clusters based on presence/absence of genes in an existing pangenome. There are three steps in the pipeline:
+Pesica is a collection of tools to detect and extract pESI plasmid contigs from *Salmonella Infantis* genomes. The two main steps in the pipeline are:
 
 * Screening: Detect the presence of marker genes in the input genomes that indicate the presence of the pESI plasmid
-* Extraction: If pESI is detected in the previous step, extract the plasmid contigs from the input genomes and annotate them
-* Ordination: Given a plasmid genome, insert it into an existing pangenome and cluster it into that pangenome.
+* Extraction: If pESI is detected in the previous step, extract the plasmid contigs from the input genomes 
+
+After using the pipeline, you will a fasta file containing the extracted pESI-like contigs and its annotations.
 
 ## Contents
 
@@ -16,7 +17,6 @@ Pesica is a collection of tools to detect and extract pESI plasmid contigs from 
 - [Workflow Details](#workflow-details)
     - [Screen](#screen)
     - [Extract](#extract)
-    - [Ordinate](#ordinate)
 - [Programs and Tools](#programs-and-tools)
 - [FAQ](#faq)
 
@@ -98,18 +98,13 @@ python pesica extract
 This will output several files that are detailed in the [extract subcommand details](#extract), but the most important ones for the next steps are:
 
 * `outputs/<run_name>/pesi_genomes` - a directory containing the plasmid genomes extracted from the input genomes
-* `outputs/<run_name>/pesi_annotations` - directories containing the `bakta` annotations for the extracted plasmid genomes, which will be used in the `ordinate` step.
-
-### Assigning the extracted pESI genome to a cluster
-
-To be implemented.
+* `outputs/<run_name>/pesi_annotations` - directories containing the `bakta` annotations for the extracted plasmid genomes.
 
 ### Notes
 
 * Since these are just snakemake workflows with a basic CLI, the pipeline needs to be run from inside this directory.
 * If you are familiar with snakemake, you can skip the CLI and run the workflow directly with your own commands and options. The commands should look something like `snakemake --use-conda --snakefile workflow/rules/<subcommand>.smk`, but you can add whatever options you want besides that.
 * The `screen` step isn't too resource intensive, but the `extract` step can be. It is recommended to run it with more cores, such as through an interactive session (eg, `salloc -n 32`). Job submission to slurm will be added later.
-
 
 
 ## Workflow details
@@ -121,18 +116,6 @@ Searches input sequences for pESI contigs.
 ### Extract
 
 For those sequences found to contain pESI, the plasmid-only contigs will be extracted
-
-### Ordinate
-
-After extracting the pESI plasmid DNA, ordinate them into the existing clusters found in the paper
-
-* Pull pESI out
-* Annotate pESI with bakta
-* Add pESI into existing pangenome
-    * This creates a gene presence absence vector
-* Figure out n nearest neighbors in pangenome space
-* In tSNE space, average the coordinates of those nearest neighbors
-* After putting it into tSNE space, assign cluster number based on tSNE nearest neighbors
 
 ## Programs and tools
 
